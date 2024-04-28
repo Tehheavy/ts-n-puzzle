@@ -1,6 +1,13 @@
 import React, { FC } from 'react';
 
-const Gameboard: FC = () => {
+interface GameboardProps {
+    imgSrc: string
+    difficulty: number
+}
+
+const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
+    console.log('imgSrc', imgSrc)
+    console.log('difficulty', difficulty)
     return (
         <div>about page</div>
     );

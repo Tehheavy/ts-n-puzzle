@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import GameboardItem from '../components/GameboardItem';
+import Gameboard from '../components/Gameboard';
 
 const PageContainer = styled.div`
   background-color: #282c34;
@@ -11,14 +11,20 @@ const PageContainer = styled.div`
   overflow: hidden;
 `
 
+// enum GameState {
+//     difficulty = 'difficulty',
+//     game = 'game'
+// }
 
 const Game: FC = () => {
     const { state } = useLocation();
     const [difficulty, setDifficulty] = useState(3)
-    console.log('state', state)
+    // const [gameState, setGameState] = useState<GameState>(GameState.difficulty)
+    const { imgSrc } = state
+    console.log('imgSrc', imgSrc, difficulty, setDifficulty)
     return (
         <PageContainer>
-            <GameboardItem />
+            <Gameboard imgSrc={imgSrc} difficulty={difficulty} />
         </PageContainer>
     );
 }
