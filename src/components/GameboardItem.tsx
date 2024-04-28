@@ -1,7 +1,5 @@
 import React, { FC } from 'react';
 
-{/* <GameBoardItem id={i} size={props.size} key={i} img={img} value={i} i={convertToXY(tempArray[i])[0]} j={convertToXY(tempArray[i])[1]} image={'https://i.imgur.com/YLWsY4G.jpg'}></GameBoardItem> */ }
-
 interface GameboardItemProps {
     id: string,
     size: number,
@@ -9,13 +7,15 @@ interface GameboardItemProps {
     value: number,
     i: number,
     j: number
+    originalI: number,
+    originalJ: number
 }
 
 const GameboardItem: FC<GameboardItemProps> = (props) => {
     const clickImage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         console.log('clicked on ', props.value)
     }
-
+    console.log('props', props)
     return (
         <div
             style={{
@@ -24,8 +24,8 @@ const GameboardItem: FC<GameboardItemProps> = (props) => {
                 overflow: 'hidden',
                 position: 'absolute',
                 transition: "all 0.2s",
-                right: `${(100 / props.size) * (props.size - 1 - props.j)}%`,
-                top: `${(100 / props.size) * (props.i)}%`,
+                right: `${(100 / props.size) * (props.size - 1 - props.originalJ)}%`,
+                top: `${(100 / props.size) * (props.originalI)}%`,
                 borderRadius: '2px'
             }}
             onClick={e => { clickImage(e) }}
