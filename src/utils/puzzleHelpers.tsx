@@ -1,3 +1,6 @@
+import GameboardItem from "../components/GameboardItem";
+import React from 'react'
+
 const initialImages = [
     'https://i.imgur.com/YLWsY4G.jpg',
     'https://i.imgur.com/YLWsY4G.jpg',
@@ -49,10 +52,16 @@ const generateRandomSolveableArray = (difficulty: number) => {
     return tempArray
 }
 
-const generateGameBoard = (difficulty: number) => {
+const generateGameBoard = (difficulty: number, imgSrc: string) => {
     const randomArray = generateRandomSolveableArray(difficulty)
+    console.log('randomArray', randomArray)
     const boardItemArray = []
-
+    for (let i = 0; i < (difficulty * difficulty) - 1; i++) {
+        let newItem1 = <GameboardItem id={`${i}`} size={difficulty} key={i} value={i} i={convertToXYCoords(randomArray[i], difficulty)[0]} j={convertToXYCoords(randomArray[i], difficulty)[1]} imgSrc={imgSrc}></GameboardItem>
+        boardItemArray[i] = newItem1;
+    }
+    console.log('boardItemArray', boardItemArray)
+    return boardItemArray
 }
 
 export {
