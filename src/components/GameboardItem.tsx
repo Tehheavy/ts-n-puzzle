@@ -6,10 +6,8 @@ interface GameboardItemProps {
     size: number,
     imgSrc: string,
     value: number,
-    i: number,
-    j: number
-    originalI: number,
-    originalJ: number,
+    coords: { x: number, y: number },
+    originalCoords: { x: number, y: number },
     onClickCallback: (index: number, boardState: number[]) => void
 }
 
@@ -31,8 +29,8 @@ const GameboardItem: FC<GameboardItemProps> = (props) => {
                 overflow: 'hidden',
                 position: 'absolute',
                 transition: "all 0.9s",
-                right: `${(100 / props.size) * (props.size - 1 - props.j)}%`,
-                top: `${(100 / props.size) * (props.i)}%`,
+                right: `${(100 / props.size) * (props.size - 1 - props.coords.y)}%`,
+                top: `${(100 / props.size) * (props.coords.x)}%`,
                 borderRadius: '2px'
             }}
             onClick={e => { clickImage(e) }}
@@ -41,7 +39,7 @@ const GameboardItem: FC<GameboardItemProps> = (props) => {
                 style={{
                     height: `${100 * props.size}%`,
                     width: `${100 * props.size}%`,
-                    margin: `-${(100 * (props.originalI))}%  0px 0px -${(100 * (props.originalJ))}%`,
+                    margin: `-${(100 * (props.originalCoords.x))}%  0px 0px -${(100 * (props.originalCoords.y))}%`,
                     opacity: props.index === props.size * props.size - 1 ? 0 : 1
                 }}
                 draggable={'false'} src={props.imgSrc}

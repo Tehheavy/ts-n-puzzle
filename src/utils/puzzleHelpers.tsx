@@ -1,6 +1,11 @@
 import GameboardItem from "../components/GameboardItem";
 import React from 'react'
 
+interface Coords {
+    x: number,
+    y: number
+}
+
 const initialImages = [
     'https://i.imgur.com/YLWsY4G.jpg',
     'https://i.imgur.com/YLWsY4G.jpg',
@@ -18,7 +23,7 @@ const initialImages = [
 const convertToXYCoords = (number: number, size: number) => {
     let y = Math.floor(number % size);
     let x = Math.floor(number / size)
-    let res = [x, y]
+    let res = { x, y }
     return res;
 }
 
@@ -62,11 +67,9 @@ const generateGameBoard = (difficulty: number, imgSrc: string, gameboardStateArr
             size={difficulty}
             key={positionIndex}
             value={positionIndex}
-            originalI={convertToXYCoords(positionIndex, difficulty)[0]}
-            originalJ={convertToXYCoords(positionIndex, difficulty)[1]}
+            originalCoords={convertToXYCoords(positionIndex, difficulty)}
             imgSrc={imgSrc}
-            i={convertToXYCoords(index, difficulty)[0]}
-            j={convertToXYCoords(index, difficulty)[1]}
+            coords={convertToXYCoords(index, difficulty)}
         />
     ))
 
@@ -79,8 +82,17 @@ const swapElements = (array: number[], index1: number, index2: number) => {
     array[index2] = temp;
 };
 
+const canSwap = (coords1: Coords, coords2: Coords) => {
+    if ((coords1.x === coords2.x && (Math.abs(coords1.y - coords2.y) === 1)) || coords1.y === coords2.y && (Math.abs(coords1.x - coords2.x) === 1)) {
+        return true
+    }
+
+    return false
+}
+
 export {
     initialImages,
+    canSwap,
     swapElements,
     generateRandomSolveableArray,
     generateGameBoard,

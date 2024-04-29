@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { generateGameBoard, generateRandomSolveableArray, swapElements } from '../utils/puzzleHelpers';
+import { canSwap, convertToXYCoords, generateGameBoard, generateRandomSolveableArray, swapElements } from '../utils/puzzleHelpers';
 
 
 interface GameboardProps {
@@ -15,7 +15,9 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
         const findEmptyIndex = boardState.findIndex(boardItem => boardItem === emptyPosition)
         const findIndex = boardState.findIndex(boardItem => boardItem === index)
         if (findEmptyIndex !== -1 && findIndex !== -1) {
-
+            if (!canSwap(convertToXYCoords(findEmptyIndex, difficulty), convertToXYCoords(findIndex, difficulty))) {
+                return
+            }
             const newBoardState = [...boardState]
             swapElements(newBoardState, findEmptyIndex, findIndex)
             const generatedBoard = generateGameBoard(difficulty, imgSrc, newBoardState, handleClickBoardItem)
