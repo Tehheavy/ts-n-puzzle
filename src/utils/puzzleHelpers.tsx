@@ -49,32 +49,40 @@ const generateRandomSolveableArray = (difficulty: number) => {
     }
     while (!isSolvable(tempArray))
 
-    return tempArray
+    return [...tempArray, difficulty * difficulty - 1]
 }
 
-const generateGameBoard = (difficulty: number, imgSrc: string) => {
-    const randomArray = generateRandomSolveableArray(difficulty)
-    const boardItemArray = []
-    for (let i = 0; i < (difficulty * difficulty) - 1; i++) {
-        let newItem1 = (<GameboardItem
-            id={`${i}`}
+const generateGameBoard = (difficulty: number, imgSrc: string, gameboardStateArray: number[], onClickCallback: (index: number, boardState: number[]) => void) => {
+    const randomArray = [...gameboardStateArray]
+    const boardItemArray = randomArray.map((positionIndex, index) => (
+        <GameboardItem
+            boardState={randomArray}
+            onClickCallback={onClickCallback}
+            index={positionIndex}
             size={difficulty}
-            key={i}
-            value={i}
-            originalI={convertToXYCoords(randomArray[i], difficulty)[0]}
-            originalJ={convertToXYCoords(randomArray[i], difficulty)[1]}
+            key={positionIndex}
+            value={positionIndex}
+            originalI={convertToXYCoords(positionIndex, difficulty)[0]}
+            originalJ={convertToXYCoords(positionIndex, difficulty)[1]}
             imgSrc={imgSrc}
-            i={convertToXYCoords(i, difficulty)[0]}
-            j={convertToXYCoords(i, difficulty)[1]}
-        />)
-        boardItemArray[i] = newItem1;
-    }
+            i={convertToXYCoords(index, difficulty)[0]}
+            j={convertToXYCoords(index, difficulty)[1]}
+        />
+    ))
 
-    return boardItemArray
+    return { board: boardItemArray, array: randomArray }
 }
+
+const swapElements = (array: number[], index1: number, index2: number) => {
+    let temp = array[index1];
+    array[index1] = array[index2];
+    array[index2] = temp;
+};
 
 export {
     initialImages,
+    swapElements,
+    generateRandomSolveableArray,
     generateGameBoard,
     convertToXYCoords
 }
