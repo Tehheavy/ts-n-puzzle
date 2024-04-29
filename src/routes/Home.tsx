@@ -49,6 +49,7 @@ const PuzzleImage = styled.img`
 
 const Home: FC = () => {
     const [images, setImages] = useState(initialImages)
+    console.log('setImages', setImages)
     const navigate = useNavigate();
 
     const handleClickImage = (imgSrc: string) => {
