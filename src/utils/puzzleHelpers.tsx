@@ -6,18 +6,12 @@ interface Coords {
     y: number
 }
 
+
 const initialImages = [
     'https://i.imgur.com/YLWsY4G.jpg',
-    'https://i.imgur.com/YLWsY4G.jpg',
-    'https://i.imgur.com/YLWsY4G.jpg',
-    'https://i.imgur.com/YLWsY4G.jpg',
-    'https://i.imgur.com/YLWsY4G.jpg',
-    'https://i.imgur.com/YLWsY4G.jpg',
-    'https://i.imgur.com/YLWsY4G.jpg',
-    'https://i.imgur.com/YLWsY4G.jpg',
-    'https://i.imgur.com/YLWsY4G.jpg',
-    'https://i.imgur.com/YLWsY4G.jpg',
-    'https://i.imgur.com/YLWsY4G.jpg'
+    'https://i.imgur.com/Irg9QIx.jpg',
+    'https://i.imgur.com/W9U5y71.jpg',
+    'https://i.imgur.com/HHEPvJG.jpg'
 ]
 
 const convertToXYCoords = (number: number, size: number) => {

@@ -6,19 +6,31 @@ const NavbarContainer = styled.div`
     height: 60px;
     width: 100%;
     background: #29605a;
+    position: relative;
+
+
+    ::before{
+        content: '';
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
+        height: 6px;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+    }
 `
 
-// const NavbarItem = styled(NavLink)`
-// font-size: 20px;
-// color: #9bd0b4;
-// font-weight: 500;
-// cursor: pointer;
+const NavbarItem = styled(NavLink)`
+    font-size: 20px;
+    color: #9bd0b4;
+    font-weight: 500;
+    cursor: pointer;
 
-// &:hover {
-//     text-decoration: underline;
-//     color: #40c57e;
-// }
-// `
+    &:hover {
+        text-decoration: underline;
+        color: #40c57e;
+    }
+`
 
 const NavbarItemContainer = styled.div`
     display: flex;
@@ -31,22 +43,22 @@ const Navbar: FC = () => {
     return (
         <NavbarContainer>
             <NavbarItemContainer>
-                <NavLink
+                <NavbarItem
                     to="/"
                     className={({ isActive, isPending }) =>
                         isPending ? "pending" : isActive ? "active" : ""
                     }
                 >
                     Home
-                </NavLink>
-                <NavLink
+                </NavbarItem>
+                <NavbarItem
                     to="/about"
                     className={({ isActive, isPending }) =>
                         isPending ? "pending" : isActive ? "active" : ""
                     }
                 >
                     About
-                </NavLink>
+                </NavbarItem>
             </NavbarItemContainer>
         </NavbarContainer>
     );

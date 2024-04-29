@@ -37,7 +37,12 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
 
     if (!gameboardState) {
         return <div>
-            <img src={imgSrc} />
+            <img style={{
+                height: '600px',
+                width: '600px',
+                overflow: 'hidden',
+                position: 'relative'
+            }} src={imgSrc} />
             <div onClick={(e) => handleClickGenerateBoard(e)}>generate</div>
         </div>
     }

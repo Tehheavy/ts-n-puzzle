@@ -12,10 +12,6 @@ interface GameboardItemProps {
 }
 
 const GameboardItem: FC<GameboardItemProps> = (props) => {
-    if (props.index === 0) {
-        console.log('props', props)
-    }
-
     const clickImage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         props.onClickCallback(props.index, props.boardState)
     }
@@ -28,7 +24,7 @@ const GameboardItem: FC<GameboardItemProps> = (props) => {
                 width: `${(100 / props.size)}%`,
                 overflow: 'hidden',
                 position: 'absolute',
-                transition: "all 0.9s",
+                transition: "all 0.4s",
                 right: `${(100 / props.size) * (props.size - 1 - props.coords.y)}%`,
                 top: `${(100 / props.size) * (props.coords.x)}%`,
                 borderRadius: '2px'
