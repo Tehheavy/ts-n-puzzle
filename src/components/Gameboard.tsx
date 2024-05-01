@@ -1,6 +1,47 @@
 import React, { FC, useState } from 'react';
 import { canSwap, convertToXYCoords, generateGameBoard, generateRandomSolveableArray, swapElements } from '../utils/puzzleHelpers';
+import styled from 'styled-components';
 
+
+const BoardPageContainer = styled.div`
+    display: inline-block;
+    flex: 1;
+    text-align: -webkit-center;
+`
+
+const BoardContainer = styled.div`
+    display: grid;
+    object-fit: cover;
+    overflow: hidden;
+    min-width: 50px;
+    max-width: 600px;
+    max-height: 600px;
+    min-height: 50px;
+    padding: 10px 10px 0px 10px;
+`
+
+
+const GenerateButton = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 30px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    margin-top: 10px;
+    background-color: white;
+`
+
+const GameView = styled.div`
+    display: flex;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    border-color: rgba(255, 255, 255, 0.301);
+    border-radius: 5px;
+    border-style: solid;
+`
 
 interface GameboardProps {
     imgSrc: string
@@ -36,26 +77,29 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
     }
 
     if (!gameboardState) {
-        return <div>
-            <img style={{
-                height: '600px',
-                width: '600px',
-                overflow: 'hidden',
-                position: 'relative'
-            }} src={imgSrc} />
-            <div onClick={(e) => handleClickGenerateBoard(e)}>generate</div>
-        </div>
+        return (
+            <BoardPageContainer>
+                <BoardContainer>
+                    <GameView>
+                        <img src={imgSrc} />
+                    </GameView>
+                </BoardContainer>
+                <GenerateButton onClick={(e) => handleClickGenerateBoard(e)}>generate</GenerateButton>
+            </BoardPageContainer>
+        )
     }
 
     const { board } = gameboardState
 
     return (
-        <div style={{
-            height: '600px',
-            width: '600px',
-            overflow: 'hidden',
-            position: 'relative'
-        }}>{board}</div>
+        <BoardPageContainer>
+            <BoardContainer>
+                <GameView>
+                    {board}
+                </GameView>
+            </BoardContainer>
+            <GenerateButton onClick={(e) => handleClickGenerateBoard(e)}>generate</GenerateButton>
+        </BoardPageContainer>
     );
 }
 
