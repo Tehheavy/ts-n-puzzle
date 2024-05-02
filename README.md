@@ -1,2 +1,0 @@
-# ts-n-puzzle
- 
