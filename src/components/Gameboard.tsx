@@ -15,9 +15,10 @@ const BoardContainer = styled.div`
     overflow: hidden;
     min-width: 50px;
     max-width: 600px;
-    max-height: 600px;
+    max-height: 80%;
     min-height: 50px;
     padding: 10px 10px 0px 10px;
+    aspect-ratio: 1/1;
 `
 
 
