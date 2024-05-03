@@ -70,6 +70,38 @@ const generateGameBoard = (difficulty: number, imgSrc: string, gameboardStateArr
     return { board: boardItemArray, array: randomArray }
 }
 
+const setHighScore = (imgSrc: string, difficulty: number, seconds: number) => {
+    const previousHighScores = localStorage.getItem('highScores')
+    if (previousHighScores) {
+        const previousHighScoresData = JSON.parse(previousHighScores) || {}
+        const previousImageHighScore = previousHighScoresData?.[imgSrc]?.[difficulty]
+        if (previousImageHighScore) {
+            if ((seconds < previousImageHighScore)) {
+                previousHighScoresData[imgSrc] = { ...previousHighScoresData[imgSrc], [difficulty]: seconds }
+                localStorage.setItem('highScores', JSON.stringify(previousHighScoresData))
+                return
+            }
+        } else {
+            previousHighScoresData[imgSrc] = { ...previousHighScoresData[imgSrc], [difficulty]: seconds }
+            localStorage.setItem('highScores', JSON.stringify(previousHighScoresData))
+        }
+        return
+    }
+    const newHighScores: { [key: string]: { [key: string]: number } } = {}
+    newHighScores[imgSrc] = { [`${difficulty}`]: seconds }
+    localStorage.setItem('highScores', JSON.stringify(newHighScores))
+}
+
+const getHighScore = (imgSrc: string, difficulty: number) => {
+    const previousHighScores = localStorage.getItem('highScores')
+    if (previousHighScores) {
+        const previousHighScoresData = JSON.parse(previousHighScores)
+        return previousHighScoresData?.[imgSrc]?.[difficulty]
+    }
+
+    return undefined
+}
+
 const swapElements = (array: number[], index1: number, index2: number) => {
     let temp = array[index1];
     array[index1] = array[index2];
@@ -86,6 +118,8 @@ const canSwap = (coords1: Coords, coords2: Coords) => {
 
 export {
     initialImages,
+    getHighScore,
+    setHighScore,
     canSwap,
     swapElements,
     generateRandomSolveableArray,

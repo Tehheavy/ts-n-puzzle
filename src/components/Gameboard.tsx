@@ -1,5 +1,5 @@
-import React, { FC, useState } from 'react';
-import { canSwap, convertToXYCoords, generateGameBoard, generateRandomSolveableArray, swapElements } from '../utils/puzzleHelpers';
+import React, { FC, useMemo, useState } from 'react';
+import { canSwap, convertToXYCoords, generateGameBoard, generateRandomSolveableArray, getHighScore, setHighScore, swapElements } from '../utils/puzzleHelpers';
 import styled from 'styled-components';
 
 
@@ -22,6 +22,7 @@ const BoardContainer = styled.div`
 
 
 const GenerateButton = styled.div`
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -43,14 +44,49 @@ const GameView = styled.div`
     border-style: solid;
 `
 
+const GameWinContainer = styled.div`
+    display: flex;
+    flex:   1;
+    position:   absolute; 
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    flex-direction: column;
+    background: #54545487;
+`
+
+const GameWinText = styled.h1`
+    color: white;
+    text-shadow: 5px 5px #000000;
+`
+
 interface GameboardProps {
     imgSrc: string
     difficulty: number
 }
 
+interface GameBoardInfo {
+    startTime: undefined | Date
+    endTime: undefined | Date
+    board: any[],
+    array: number[]
+}
+
 const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
     const emptyPosition = difficulty * difficulty - 1
-    const [gameboardState, setGameboardState] = useState<null | { board: any[], array: number[] }>(null)
+    const [gameboardState, setGameboardState] = useState<null | GameBoardInfo>(null)
+    const solveTime = useMemo(() => {
+        if (gameboardState?.endTime && gameboardState?.startTime) {
+            const seconds = (gameboardState.endTime.getTime() - gameboardState.startTime.getTime()) / 1000
+            setHighScore(imgSrc, difficulty, seconds)
+            return { time: (gameboardState.endTime.getTime() - gameboardState.startTime.getTime()) / 1000, highscore: getHighScore(imgSrc, difficulty) }
+        }
+    }, [gameboardState])
+
+    const solvedBoard = useMemo(() => {
+        const solvedArray = new Array(difficulty * difficulty).fill(0).map((num, index) => index)
+        return generateGameBoard(difficulty, imgSrc, solvedArray, () => { })
+    }, [difficulty, imgSrc])
 
     const handleClickBoardItem = (index: number, boardState: number[]) => {
         const findEmptyIndex = boardState.findIndex(boardItem => boardItem === emptyPosition)
@@ -65,7 +101,11 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
 
             // Sorting the element array by keys for render optimizations
             const sortBoardElementsByKey = generatedBoard.board.sort((a, b) => (Number(a.key) - Number(b.key)))
-            setGameboardState({ board: sortBoardElementsByKey, array: generatedBoard.array })
+            const isCompleted = (`${generatedBoard.array}` === `${solvedBoard.array}`)
+            setGameboardState(prev => {
+                const prevStartTime = prev?.startTime
+                return ({ board: sortBoardElementsByKey, array: generatedBoard.array, startTime: prevStartTime || new Date(), endTime: isCompleted ? new Date() : undefined })
+            })
         }
     }
 
@@ -73,18 +113,23 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
         const generatedBoard = generateGameBoard(difficulty, imgSrc, generateRandomSolveableArray(difficulty), handleClickBoardItem)
         // Sorting the element array by keys for render optimizations
         const sortBoardElementsByKey = generatedBoard.board.sort((a, b) => (Number(a.key) - Number(b.key)))
-        setGameboardState({ board: sortBoardElementsByKey, array: generatedBoard.array })
+        setGameboardState({ board: sortBoardElementsByKey, array: generatedBoard.array, startTime: new Date(), endTime: undefined })
     }
+
+
+    const gameEnded = !!gameboardState?.endTime
+
 
     if (!gameboardState) {
         return (
             <BoardPageContainer>
                 <BoardContainer>
                     <GameView>
-                        <img src={imgSrc} />
+                        {!!gameEnded && null}
+                        {solvedBoard.board}
                     </GameView>
                 </BoardContainer>
-                <GenerateButton onClick={(e) => handleClickGenerateBoard(e)}>generate</GenerateButton>
+                <GenerateButton onClick={(e) => handleClickGenerateBoard(e)}>play</GenerateButton>
             </BoardPageContainer>
         )
     }
@@ -95,10 +140,17 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
         <BoardPageContainer>
             <BoardContainer>
                 <GameView>
+                    {!!gameEnded && (
+                        <GameWinContainer>
+                            <GameWinText>WIN!</GameWinText>
+                            <GameWinText>{`Solve time: ${solveTime?.time} seconds`}</GameWinText>
+                            <GameWinText>{`HighScore: ${solveTime?.highscore} seconds`}</GameWinText>
+                        </GameWinContainer>
+                    )}
                     {board}
                 </GameView>
             </BoardContainer>
-            <GenerateButton onClick={(e) => handleClickGenerateBoard(e)}>generate</GenerateButton>
+            <GenerateButton onClick={(e) => handleClickGenerateBoard(e)}>re-generate</GenerateButton>
         </BoardPageContainer>
     );
 }
