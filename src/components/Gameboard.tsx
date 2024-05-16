@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 
 const BoardPageContainer = styled.div`
+    overscroll-behavior: none;
     display: inline-block;
     flex: 1;
     text-align: -webkit-center;
@@ -54,6 +55,38 @@ const GameWinContainer = styled.div`
     z-index: 1;
     flex-direction: column;
     background: #54545487;
+`
+
+const HintMark = styled.div`
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: white;
+    position: absolute;
+    top:0;
+    right:0;
+    &:hover ~ #solution-image{
+        opacity: 1;
+    }
+    
+`
+
+const SolutionContainer = styled.div`
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+`
+
+const SolutionImage = styled.img`
+    height: 50%;
+    width: 50%;
+    float: inline-start;
+    border-style: solid;
+    border-width: 3px;
+    border-color: white;
 `
 
 const GameWinText = styled.h1`
@@ -149,6 +182,10 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
                         </GameWinContainer>
                     )}
                     {board}
+                    <HintMark>{'?'}</HintMark>
+                    <SolutionContainer id='solution-image'>
+                        <SolutionImage src={imgSrc} />
+                    </SolutionContainer>
                 </GameView>
             </BoardContainer>
             <GenerateButton onClick={(e) => handleClickGenerateBoard(e)}>re-generate</GenerateButton>
