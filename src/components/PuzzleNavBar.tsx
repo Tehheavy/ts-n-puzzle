@@ -7,9 +7,9 @@ const NavbarContainer = styled.div`
     width: 100%;
     background: #29605a;
     position: relative;
+    align-content: center;
 
-
-    ::before{
+    &::after {
         content: '';
         background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
         height: 6px;
@@ -25,10 +25,15 @@ const NavbarItem = styled(NavLink)`
     color: #9bd0b4;
     font-weight: 500;
     cursor: pointer;
+    text-decoration: none;
 
     &:hover {
         text-decoration: underline;
         color: #40c57e;
+    }
+
+    &.active {
+        text-decoration: underline;
     }
 `
 
@@ -45,17 +50,11 @@ const Navbar: FC = () => {
             <NavbarItemContainer>
                 <NavbarItem
                     to="/"
-                    className={({ isActive, isPending }) =>
-                        isPending ? "pending" : isActive ? "active" : ""
-                    }
                 >
                     Home
                 </NavbarItem>
                 <NavbarItem
                     to="/about"
-                    className={({ isActive, isPending }) =>
-                        isPending ? "pending" : isActive ? "active" : ""
-                    }
                 >
                     About
                 </NavbarItem>

@@ -62,7 +62,7 @@ const Home: FC = () => {
         <PageContainer>
             <SelectionTitleContainer>
                 <TitleText>
-                    please select a puzzle image
+                    Please select a puzzle image.
                 </TitleText>
                 <PuzzleImagesContainer>
                     {
