@@ -22,7 +22,10 @@ const Game: FC = () => {
     const [difficulty, setDifficulty] = useState(3)
     // const [gameState, setGameState] = useState<GameState>(GameState.difficulty)
     const imgSrc = state?.imgSrc || ''
-    console.log('imgSrc', imgSrc, difficulty, setDifficulty)
+
+    const handleSetDifficulty = (newDifficultyIncrease: number) => {
+        setDifficulty(prev => prev + newDifficultyIncrease)
+    }
 
     useEffect(() => {
         if (!imgSrc) {
@@ -32,7 +35,7 @@ const Game: FC = () => {
 
     return (
         <PageContainer>
-            <Gameboard imgSrc={imgSrc} difficulty={difficulty} />
+            <Gameboard imgSrc={imgSrc} difficulty={difficulty} handleSetDifficulty={handleSetDifficulty} />
         </PageContainer>
     );
 }

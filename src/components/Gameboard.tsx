@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { canSwap, convertToXYCoords, generateGameBoard, generateRandomSolveableArray, getHighScore, setHighScore, swapElements } from '../utils/puzzleHelpers';
 import styled from 'styled-components';
 
@@ -69,7 +69,18 @@ const HintMark = styled.div`
     &:hover ~ #solution-image{
         opacity: 1;
     }
-    
+`
+
+const DifficultyMark = styled.div`
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: white;
+    position: absolute;
+    top: 0;
+    right: 30px;
+    line-height: 18px;
 `
 
 const SolutionContainer = styled.div`
@@ -97,6 +108,7 @@ const GameWinText = styled.h1`
 interface GameboardProps {
     imgSrc: string
     difficulty: number
+    handleSetDifficulty: (newDifficulty: number) => void
 }
 
 interface GameBoardInfo {
@@ -106,7 +118,7 @@ interface GameBoardInfo {
     array: number[]
 }
 
-const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
+const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty, handleSetDifficulty }) => {
     const emptyPosition = difficulty * difficulty - 1
     const [gameboardState, setGameboardState] = useState<null | GameBoardInfo>(null)
     const solveTime = useMemo(() => {
@@ -122,7 +134,7 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
         return generateGameBoard(difficulty, imgSrc, solvedArray, () => { })
     }, [difficulty, imgSrc])
 
-    const handleClickBoardItem = (index: number, boardState: number[]) => {
+    const handleClickBoardItem = useCallback((index: number, boardState: number[]) => {
         const findEmptyIndex = boardState.findIndex(boardItem => boardItem === emptyPosition)
         const findIndex = boardState.findIndex(boardItem => boardItem === index)
         if (findEmptyIndex !== -1 && findIndex !== -1) {
@@ -141,14 +153,22 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
                 return ({ board: sortBoardElementsByKey, array: generatedBoard.array, startTime: prevStartTime || new Date(), endTime: isCompleted ? new Date() : undefined })
             })
         }
-    }
+    }, [difficulty, imgSrc])
 
-    const handleClickGenerateBoard = (e: any) => {
+    const handleClickGenerateBoard = useCallback((e: any, newGame?: boolean) => {
+        if (newGame) {
+            setGameboardState(null)
+            return
+        }
         const generatedBoard = generateGameBoard(difficulty, imgSrc, generateRandomSolveableArray(difficulty), handleClickBoardItem)
         // Sorting the element array by keys for render optimizations
         const sortBoardElementsByKey = generatedBoard.board.sort((a, b) => (Number(a.key) - Number(b.key)))
         setGameboardState({ board: sortBoardElementsByKey, array: generatedBoard.array, startTime: new Date(), endTime: undefined })
-    }
+    }, [difficulty])
+
+    useEffect(() => {
+        handleClickGenerateBoard({}, true)
+    }, [difficulty])
 
 
     const gameEnded = !!gameboardState?.endTime
@@ -183,6 +203,8 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty }) => {
                     )}
                     {board}
                     <HintMark>{'?'}</HintMark>
+                    <DifficultyMark onClick={() => { handleSetDifficulty(1) }} style={{ right: '60px' }}>{'+'}</DifficultyMark>
+                    <DifficultyMark onClick={() => { handleSetDifficulty(-1) }}>{'-'}</DifficultyMark>
                     <SolutionContainer id='solution-image'>
                         <SolutionImage src={imgSrc} />
                     </SolutionContainer>
