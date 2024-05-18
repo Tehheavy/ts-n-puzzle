@@ -127,7 +127,7 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty, handleSetDifficulty
             setHighScore(imgSrc, difficulty, seconds)
             return { time: (gameboardState.endTime.getTime() - gameboardState.startTime.getTime()) / 1000, highscore: getHighScore(imgSrc, difficulty) }
         }
-    }, [gameboardState])
+    }, [gameboardState, imgSrc, difficulty])
 
     const solvedBoard = useMemo(() => {
         const solvedArray = new Array(difficulty * difficulty).fill(0).map((num, index) => index)
@@ -153,7 +153,7 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty, handleSetDifficulty
                 return ({ board: sortBoardElementsByKey, array: generatedBoard.array, startTime: prevStartTime || new Date(), endTime: isCompleted ? new Date() : undefined })
             })
         }
-    }, [difficulty, imgSrc])
+    }, [difficulty, imgSrc, emptyPosition, solvedBoard.array])
 
     const handleClickGenerateBoard = useCallback((e: any, newGame?: boolean) => {
         if (newGame) {
@@ -164,7 +164,7 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty, handleSetDifficulty
         // Sorting the element array by keys for render optimizations
         const sortBoardElementsByKey = generatedBoard.board.sort((a, b) => (Number(a.key) - Number(b.key)))
         setGameboardState({ board: sortBoardElementsByKey, array: generatedBoard.array, startTime: new Date(), endTime: undefined })
-    }, [difficulty])
+    }, [difficulty, handleClickBoardItem, imgSrc])
 
     useEffect(() => {
         handleClickGenerateBoard({}, true)

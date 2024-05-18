@@ -34,7 +34,7 @@ const sumInversions = (randomValueArray: number[]) => {
 
 
 const isSolvable = (randomValueArray: number[]) => {
-    return (sumInversions(randomValueArray) % 2 == 0)
+    return (sumInversions(randomValueArray) % 2 === 0)
 }
 
 const generateRandomSolveableArray = (difficulty: number) => {
