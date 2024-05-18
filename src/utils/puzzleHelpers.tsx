@@ -116,7 +116,60 @@ const canSwap = (coords1: Coords, coords2: Coords) => {
     return false
 }
 
+const handleKeyboardClick = (ev: KeyboardEvent, boardState: number[] | undefined, difficulty: number, imgSrc: string, handleClickBoardItem: (index: number, boardState: number[]) => void) => {
+    if (!boardState) {
+        return undefined
+    }
+
+    const emptyPosition = difficulty * difficulty - 1
+    const findEmptyIndex = boardState.findIndex(boardItem => boardItem === emptyPosition)
+    let newDirectionIndex = findEmptyIndex
+    let validClick = false
+    switch (ev.code) {
+        case 'ArrowDown': {
+            newDirectionIndex += difficulty
+            validClick = true
+            break
+        }
+        case 'ArrowUp': {
+            newDirectionIndex -= difficulty
+            validClick = true
+            break
+        }
+        case 'ArrowLeft': {
+            newDirectionIndex -= 1
+            validClick = true
+            break
+        }
+        case 'ArrowRight': {
+            newDirectionIndex += 1
+            validClick = true
+            break
+        }
+    }
+
+    if (!validClick || findEmptyIndex >= (difficulty * difficulty) || findEmptyIndex < 0) {
+        return
+    }
+
+    const findIndex = newDirectionIndex
+    if (findEmptyIndex !== -1 && findIndex !== -1) {
+        if (!canSwap(convertToXYCoords(findEmptyIndex, difficulty), convertToXYCoords(findIndex, difficulty))) {
+            return
+        }
+
+        const newBoardState = [...boardState]
+        swapElements(newBoardState, findEmptyIndex, findIndex)
+        const generatedBoard = generateGameBoard(difficulty, imgSrc, newBoardState, handleClickBoardItem)
+
+        // Sorting the element array by keys for render optimizations
+        const sortBoardElementsByKey = generatedBoard.board.sort((a, b) => (Number(a.key) - Number(b.key)))
+        return { board: sortBoardElementsByKey, array: generatedBoard.array }
+    }
+}
+
 export {
+    handleKeyboardClick,
     initialImages,
     getHighScore,
     setHighScore,

@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { canSwap, convertToXYCoords, generateGameBoard, generateRandomSolveableArray, getHighScore, setHighScore, swapElements } from '../utils/puzzleHelpers';
+import { canSwap, convertToXYCoords, generateGameBoard, generateRandomSolveableArray, getHighScore, handleKeyboardClick, setHighScore, swapElements } from '../utils/puzzleHelpers';
 import styled from 'styled-components';
 
 
@@ -169,6 +169,33 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty, handleSetDifficulty
     useEffect(() => {
         handleClickGenerateBoard({}, true)
     }, [difficulty])
+
+    useEffect(() => {
+        if (!gameboardState) {
+            return
+        }
+
+        const handleKeyDown = (ev: KeyboardEvent) => {
+            const generatedBoard = handleKeyboardClick(ev, gameboardState?.array, difficulty, imgSrc, handleClickBoardItem)
+            if (!generatedBoard) {
+                return
+            }
+
+            // Sorting the element array by keys for render optimizations
+            const sortBoardElementsByKey = generatedBoard.board.sort((a, b) => (Number(a.key) - Number(b.key)))
+            const isCompleted = (`${generatedBoard.array}` === `${solvedBoard.array}`)
+            setGameboardState(prev => {
+                const prevStartTime = prev?.startTime
+                return ({ ...generatedBoard, board: sortBoardElementsByKey, startTime: prevStartTime || new Date(), endTime: isCompleted ? new Date() : undefined })
+            })
+        };
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+
+    }, [difficulty, gameboardState?.array]);
 
 
     const gameEnded = !!gameboardState?.endTime
