@@ -127,28 +127,28 @@ const handleKeyboardClick = (ev: KeyboardEvent, boardState: number[] | undefined
     let validClick = false
     switch (ev.code) {
         case 'ArrowDown': {
-            newDirectionIndex += difficulty
-            validClick = true
-            break
-        }
-        case 'ArrowUp': {
             newDirectionIndex -= difficulty
             validClick = true
             break
         }
+        case 'ArrowUp': {
+            newDirectionIndex += difficulty
+            validClick = true
+            break
+        }
         case 'ArrowLeft': {
-            newDirectionIndex -= 1
+            newDirectionIndex += 1
             validClick = true
             break
         }
         case 'ArrowRight': {
-            newDirectionIndex += 1
+            newDirectionIndex -= 1
             validClick = true
             break
         }
     }
 
-    if (!validClick || findEmptyIndex >= (difficulty * difficulty) || findEmptyIndex < 0) {
+    if (!validClick || newDirectionIndex >= (difficulty * difficulty) || newDirectionIndex < 0) {
         return
     }
 
