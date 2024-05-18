@@ -116,7 +116,7 @@ const canSwap = (coords1: Coords, coords2: Coords) => {
     return false
 }
 
-const handleKeyboardClick = (ev: KeyboardEvent, boardState: number[] | undefined, difficulty: number, imgSrc: string, handleClickBoardItem: (index: number, boardState: number[]) => void) => {
+const handleKeyboardClick = (ev: KeyboardEvent, boardState: number[] | undefined, difficulty: number, imgSrc: string, handleClickBoardItem: (index: number, boardState: number[]) => void, invertedKeyboard: boolean) => {
     if (!boardState) {
         return undefined
     }
@@ -127,21 +127,45 @@ const handleKeyboardClick = (ev: KeyboardEvent, boardState: number[] | undefined
     let validClick = false
     switch (ev.code) {
         case 'ArrowDown': {
+            if (invertedKeyboard) {
+                newDirectionIndex += difficulty
+                validClick = true
+                break
+            }
+
             newDirectionIndex -= difficulty
             validClick = true
             break
         }
         case 'ArrowUp': {
+            if (invertedKeyboard) {
+                newDirectionIndex -= difficulty
+                validClick = true
+                break
+            }
+
             newDirectionIndex += difficulty
             validClick = true
             break
         }
         case 'ArrowLeft': {
+            if (invertedKeyboard) {
+                newDirectionIndex -= 1
+                validClick = true
+                break
+            }
+
             newDirectionIndex += 1
             validClick = true
             break
         }
         case 'ArrowRight': {
+            if (invertedKeyboard) {
+                newDirectionIndex += 1
+                validClick = true
+                break
+            }
+
             newDirectionIndex -= 1
             validClick = true
             break

@@ -120,6 +120,7 @@ interface GameBoardInfo {
 
 const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty, handleSetDifficulty }) => {
     const emptyPosition = difficulty * difficulty - 1
+    const [invertedKeyboard, setInvertedKeyboard] = useState(false)
     const [gameboardState, setGameboardState] = useState<null | GameBoardInfo>(null)
     const solveTime = useMemo(() => {
         if (gameboardState?.endTime && gameboardState?.startTime) {
@@ -176,7 +177,7 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty, handleSetDifficulty
         }
 
         const handleKeyDown = (ev: KeyboardEvent) => {
-            const generatedBoard = handleKeyboardClick(ev, gameboardState?.array, difficulty, imgSrc, handleClickBoardItem)
+            const generatedBoard = handleKeyboardClick(ev, gameboardState?.array, difficulty, imgSrc, handleClickBoardItem, invertedKeyboard)
             if (!generatedBoard) {
                 return
             }
@@ -195,7 +196,7 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty, handleSetDifficulty
             document.removeEventListener('keydown', handleKeyDown);
         };
 
-    }, [difficulty, gameboardState?.array]);
+    }, [difficulty, gameboardState?.array, invertedKeyboard]);
 
 
     const gameEnded = !!gameboardState?.endTime
@@ -230,7 +231,9 @@ const Gameboard: FC<GameboardProps> = ({ imgSrc, difficulty, handleSetDifficulty
                     )}
                     {board}
                     <HintMark>{'?'}</HintMark>
+                    <DifficultyMark onClick={() => { setInvertedKeyboard(prev => !prev) }} style={{ right: '90px' }}>{invertedKeyboard ? '⧑' : '⧒'}</DifficultyMark>
                     <DifficultyMark onClick={() => { handleSetDifficulty(1) }} style={{ right: '60px' }}>{'+'}</DifficultyMark>
+                    <DifficultyMark onClick={() => { handleSetDifficulty(-1) }}>{'-'}</DifficultyMark>
                     <DifficultyMark onClick={() => { handleSetDifficulty(-1) }}>{'-'}</DifficultyMark>
                     <SolutionContainer id='solution-image'>
                         <SolutionImage src={imgSrc} />
